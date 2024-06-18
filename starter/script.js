@@ -8,6 +8,12 @@ const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 
+///////////////////////////
+
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+
+///////////////////////////
 const openModal = function () {
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
@@ -29,8 +35,7 @@ document.addEventListener('keydown', function (e) {
     closeModal();
   }
 });
-
-
+ m
 ///////////////////////////////////////
 // Button scrolling\
 btnScrollTo.addEventListener('click', function(e){
@@ -60,4 +65,24 @@ console.log(
   // });
 
   section1.scrollIntoView({behavior: 'smooth'});
+});
+
+// **Paginazione**
+
+// Seleziona tutti gli elementi con la classe 'nav__link' e li processa individualmente
+document.querySelectorAll('.nav__link').forEach(function (el) {
+  // Aggiunge un event listener 'click' ad ogni elemento
+  el.addEventListener('click', function (e) {
+    // Previene il comportamento di default del link (evita che la pagina salti)
+    e.preventDefault();
+
+    // Recupera l'ID della sezione target dall'attributo 'href' del link
+    const id = this.getAttribute('href');
+
+    // Debug: stampa l'ID ottenuto (console) del browser
+    console.log(id);
+
+    // Scorri dolcemente alla sezione con l'ID corrispondente
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+  });
 });

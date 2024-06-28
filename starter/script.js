@@ -260,5 +260,150 @@ allSections.forEach(function (section) {
 });
 
 ///////////////////////////////////////
+//seleziona tutti gli elenti img con atrtributo data-src
+const imgTargets = document.querySelectorAll('img[data-src]');
 
+const loading = function(entries, observer) {
+  //riceve un array di oggetti intersectionObserverEntries e l istanza dell osservatore
+  const [entry] = entries; //destructuring assistment
+  
+  //controllo se limmagine interagisce col viewport
+  if (!entry.isIntersecting) return; //se non interagisce esce
 
+  // Sostituisce l'attributo src dell'immagine con il valore dell'attributo data-src
+  entry.target.src = entry.target.dataset.src;
+
+  // Aggiunge un ascoltatore di eventi per l'evento 'load' sull'immagine
+  entry.target.addEventListener('load', function(){
+    ebtry.target.classList.remove('lazy-img');
+  });
+
+  
+  // Annulla l'osservazione dell'elemento immagine corrente dall'IntersectionObserver
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImg, {
+  // Imposta la funzione loadImg come callback per le intersezioni
+  root: null,  // Usa il viewport come elemento di riferimento
+  threshold: 0,  // Carica l'immagine non appena interseca il viewport
+  rootMargin: '200px',  // Inizia l'osservazione 200px prima dell'intersezione con il viewport
+});
+
+// Ciclo su ogni immagine con data-src e aggiungila all'osservatore
+imgTargets.forEach(img => imgObserver.observe(img));
+
+////////////////////////////////////////
+//slider
+
+const slider = function()
+{
+  //seleziono tutti gli el che mi servono
+  const slider = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelectorAll('.slider__btn--left');
+  const btnRight = document.querySelectorAll('.slider__btn--right');
+  const dotContainer = document.querySelectorAll('.dots');
+
+  //variabili di stato
+  let curSlide = 0;
+  const maxSlide = slide.length;
+
+  //funz interne dello slider
+
+  //creo i pallini di navigazione
+  const createDots = function()
+  {
+    //ciclo su ogni slide
+    slides.forEach(function(_, i)
+    {
+      // Inserisce un nuovo elemento button con classe 'dots__dot' e attributo data-slide="{indice}" dentro il contenitore dei pallini
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  //attiva il pallino di navigazione corrispondente alla slide attuale
+  const activateDot = function(slide)
+  {
+    // Rimuove la classe 'dots__dot--active' da tutti i pallini
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+    // Aggiunge la classe 'dots__dot--active' al pallino corrispondente allo slide specificato
+    document
+      .querySelectorAll('.dots__dot[data-slide="${slide}"]')
+      .classList.add('dots__dot--active');
+  };
+
+  // Sposta lo slider allo slide specificato
+  const goToSlide = function (slide) {
+    // Ciclo su ogni slide
+    slides.forEach(
+      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+    );
+  };
+
+  // Funzioni per la navigazione
+
+  // Passa allo slide successivo
+  const nextSlide = function () {
+    // Se siamo all'ultimo slide, torniamo al primo
+    if (curSlide === maxSlide - 1) {
+      curSlide = 0;
+    } else {
+      curSlide++;
+    }
+
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  // Passa allo slide precedente
+  const prevSlide = function () {
+    // Se siamo al primo slide, torniamo all'ultimo
+    if (curSlide === 0) {  
+      curSlide = maxSlide - 1;
+    } else {
+      curSlide--;
+    }
+    goToSlide(curSlide);
+    activateDot(curSlide);
+  };
+
+  // Funzione di inizializzazione
+  const init = function () {
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  };
+
+  // Inizializza lo slider
+  init();
+
+  // Event listener per la navigazione
+  // gestione click sui pulsanti di nav
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  //gestione tasti tasti freccia
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowLeft') prevSlide();
+    e.key === 'ArrowRight' && nextSlide();
+  });
+
+  //gestione click pallini di nav
+  dotContainer.addEventListener('click', function (e) {
+    //controllo se il click avvenuto su um pallino
+    if (e.target.classList.contains('dots__dot')) {
+      const { slide } = e.target.dataset;  // Recupera l'indice dello slide dal data-slide del pallino cliccato
+      goToSlide(slide);
+      activateDot(slide);
+    }
+  });
+};
+
+// Esegue la funzione slider per inizializzare lo slider
+slider();

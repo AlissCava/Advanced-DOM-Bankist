@@ -1,322 +1,249 @@
-'use strict';
+'use strict'; // Modalità stretta per prevenire errori
+
+// Selezione degli elementi HTML
+const modal = document.querySelector('.modal'); // Seleziona l'elemento con la classe "modal"
+const overlay = document.querySelector('.overlay'); // Seleziona l'elemento con la classe "overlay"
+const btnCloseModal = document.querySelector('.btn--close-modal'); // Seleziona il bottone con la classe "btn--close-modal"
+const btnsOpenModal = document.querySelectorAll('.btn--show-modal'); // Seleziona tutti i bottoni con la classe "btn--show-modal"
+const btnScrollTo = document.querySelector('.btn--scroll-to'); // Seleziona il bottone con la classe "btn--scroll-to" (non utilizzato in questo codice)
+const section1 = document.querySelector('#section--1'); // Seleziona l'elemento con l'id "section--1" (non utilizzato in questo codice)
+const nav = document.querySelector('.nav'); // Seleziona l'elemento con la classe "nav" (non utilizzato in questo codice)
+const tabs = document.querySelectorAll('.operations__tab'); // Seleziona tutti gli elementi con la classe "operations__tab" (non utilizzato in questo codice)
+const tabsContainer = document.querySelector('.operations__tab-container'); // Seleziona l'elemento con la classe "operations__tab-container" (non utilizzato in questo codice)
+const tabsContent = document.querySelectorAll('.operations__content'); // Seleziona tutti gli elementi con la classe "operations__content" (non utilizzato in questo codice)
 
 ///////////////////////////////////////
-// Modal window
+// Finestra modale
 
-const modal = document.querySelector('.modal');
-const overlay = document.querySelector('.overlay');
-const btnCloseModal = document.querySelector('.btn--close-modal');
-const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
-
-///////////////////////////
-
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
-const nav = document.querySelector('.nav');
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
-
-///////////////////////////
-const openModal = function () {
-  modal.classList.remove('hidden');
-  overlay.classList.remove('hidden');
+const openModal = function (e) {
+  e.preventDefault(); // Previene l'azione di default del bottone (es. invio di un form)
+  modal.classList.remove('hidden'); // Rimuove la classe "hidden" dall'elemento modale, rendendolo visibile
+  overlay.classList.remove('hidden'); // Rimuove la classe "hidden" dall'elemento overlay, rendendolo visibile
 };
 
 const closeModal = function () {
-  modal.classList.add('hidden');
-  overlay.classList.add('hidden');
+  modal.classList.add('hidden'); // Aggiunge la classe "hidden" all'elemento modale, nascondendolo
+  overlay.classList.add('hidden'); // Aggiunge la classe "hidden" all'elemento overlay, nascondendolo
 };
 
-for (let i = 0; i < btnsOpenModal.length; i++)
-  btnsOpenModal[i].addEventListener('click', openModal);
+btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal)); // Aggiunge un event listener "click" a tutti i bottoni per aprire la modale
 
-btnCloseModal.addEventListener('click', closeModal);
-overlay.addEventListener('click', closeModal);
+btnCloseModal.addEventListener('click', closeModal); // Aggiunge un event listener "click" al bottone di chiusura della modale
+overlay.addEventListener('click', closeModal); // Aggiunge un event listener "click" all'overlay per chiudere la modale cliccandoci sopra
 
 document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
-    closeModal();
+  if (e.key === 'Escape' && !modal.classList.contains('hidden')) { // Controlla se viene premuto il tasto "Escape" e se la modale è visibile
+    closeModal(); // Chiude la modale se sono soddisfatte entrambe le condizioni
   }
 });
- m
+
+
+
 ///////////////////////////////////////
 // Button scrolling\
-btnScrollTo.addEventListener('click', function(e){
-const s1coords = section1.getBoundingClientRect();
-console.log(s1coords);
+///////////////////////////////////////
+// Button scrolling
 
-console.log(e.target.getBoundingClientRect);
+btnScrollTo.addEventListener('click', function (e) {
+  const s1coords = section1.getBoundingClientRect();
+  console.log(s1coords); // Stampa le coordinate rettangolari rispetto al viewport dell'elemento con id "section--1"
 
-console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset);
+  console.log(e.target.getBoundingClientRect()); // Stampa le coordinate rettangolari rispetto al viewport del bottone cliccato
 
-console.log(
-  'jeght/whidt viewport',
-  document.documentElement.clientHeight,
-  document.documentElement.clientWidth,
-)
+  console.log('Current scroll (X/Y)', window.pageXOffset, window.pageYOffset); // Stampa lo scorrimento corrente della pagina (posizioni orizzontale e verticale)
 
-  // Scrolling
-  // window.scrollTo(
-  //   s1coords.left + window.pageXOffset,
-  //   s1coords.top + window.pageYOffset
-  // );
+  console.log(
+    'height/width viewport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  ); // Stampa l'altezza e la larghezza della finestra del browser
 
-  // window.scrollTo({
-  //   left: s1coords.left + window.pageXOffset,
-  //   top: s1coords.top + window.pageYOffset,
-  //   behavior: 'smooth',
-  // });
-
-  section1.scrollIntoView({behavior: 'smooth'});
+  section1.scrollIntoView({ behavior: 'smooth' }); // Scorri alla sezione 1 con animazione fluida
 });
 
 ///////////////////////////////////////
 
-/*
-// **Paginazione**
-// Seleziona tutti gli elementi con la classe 'nav__link' e li processa individualmente
-document.querySelectorAll('.nav__link').forEach(function (el) {
-  // Aggiunge un event listener 'click' ad ogni elemento
-  el.addEventListener('click', function (e) {
-    // Previene il comportamento di default del link (evita che la pagina salti)
-    e.preventDefault();
-
-    // Recupera l'ID della sezione target dall'attributo 'href' del link
-    const id = this.getAttribute('href');
-
-    // Debug: stampa l'ID ottenuto (console) del browser
-    console.log(id);
-
-    // Scorri dolcemente alla sezione con l'ID corrispondente
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
-  });
-});
-*/
-
-// Paginazione (Navigation)
-// Seleziona l'elemento con la classe 'nav__links' (assume che ci sia solo uno)
 document.querySelector('.nav__links').addEventListener('click', function (e) {
-  // Previene il comportamento di default del click (evita che la pagina salti)
-  e.preventDefault();
+  e.preventDefault(); // Previene l'azione di default del link (es. caricamento di una nuova pagina)
 
-  // Strategia di selezione target (Matching strategy). se quello che ho cliccato ha tra le ckassi quella cerecata...
+  // Strategia di selezione
   if (e.target.classList.contains('nav__link')) {
-    // Verifica se l'elemento cliccato ha la classe 'nav__link'
     const id = e.target.getAttribute('href');
-    // Recupera l'ID della sezione target dall'attributo 'href' del link cliccato
-
-    // Scorri dolcemente alla sezione con l'ID corrispondente
-    document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    document.querySelector(id).scrollIntoView({ behavior: 'smooth' }); // Scorri alla sezione con id preso dall'href del link cliccato, con animazione fluida
   }
 });
 
 ////////////////////////////////////////
 // **Componente schede a tab (Tabbed component)**
+// Seleziona il contenitore delle schede operative
+const tabsContainer = document.querySelector('.operations__tabs');
 
-// Aggiunge un event listener 'click' al contenitore delle schede
 tabsContainer.addEventListener('click', function (e) {
-
-  // Recupera l'elemento cliccato più vicino con la classe 'operations__tab'
+  // Trova la scheda cliccata più vicina con la classe '.operations__tab'
   const clicked = e.target.closest('.operations__tab');
 
-  // Clausola di guardia (Guard clause)
-  if (!clicked) return; // Se non è stato cliccato un elemento valido, esci dalla funzione
+  // Controlla se è stata cliccata una scheda valida
+  if (!clicked) return;
 
-  // Rimuovi le classi 'active' da tutte le schede e contenuti
+  // Rimuovi la classe di attivazione da tutte le schede
   tabs.forEach(t => t.classList.remove('operations__tab--active'));
   tabsContent.forEach(c => c.classList.remove('operations__content--active'));
 
-  // Attiva la scheda cliccata
+  // Aggiungi la classe di attivazione alla scheda cliccata
   clicked.classList.add('operations__tab--active');
 
-   /*
-  // Recupera il contenuto associato alla scheda cliccata tramite dataset.tab
-  const contentId = `operations__content--${clicked.dataset.tab}`;
-  const content = document.querySelector(contentId);
+  // Recupera il contenuto associato alla scheda cliccata
+  const targetContent = document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`);
 
-  // Attiva il contenuto associato alla scheda cliccata
- 
-  if (content) {
-    content.classList.add('operations__content--active');
+  // Controlla se è stato trovato il contenuto associato
+  if (targetContent) {
+    // Aggiungi la classe di attivazione al contenuto associato
+    targetContent.classList.add('operations__content--active');
   } else {
-    // Debug: messaggio di avviso se non viene trovato il contenuto associato
-    console.error("Contenuto associato alla scheda non trovato:", contentId);
+    // Sezione opzionale per gestire il caso in cui non venga trovato il contenuto
+    console.error('Contenuto associato alla scheda non trovato');
   }
-  */
-
-  document
-  .querySelector(`.operations__content--${clicked.dataset.tab}`)
-  .classList.add('operations__content--active');
 });
 
-// **Animazione fade del menu** (Menu fade animation)
+///////////////////////////////////////
+// Animazione dissolvenza del menu
 
-// Funzione per gestire l'effetto hover sui link di navigazione
 const handleHover = function (e) {
-  // Controlla se l'elemento su cui si passa sopra ha la classe 'nav__link'
+  // Controlla se l'elemento cliccato ha la classe 'nav__link'
   if (e.target.classList.contains('nav__link')) {
-    // Recupera l'elemento del link cliccato
     const link = e.target;
-
-    // Recupera tutti i link fratelli all'interno dello stesso elemento .nav
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
-
-    // Recupera l'immagine del logo (se presente) all'interno dello stesso elemento .nav
     const logo = link.closest('.nav').querySelector('img');
 
-    // Scorri ogni elemento fratello del link cliccato
+    // Attenua l'opacità di tutti i link tranne quello cliccato
     siblings.forEach(el => {
-      // Imposta l'opacità degli elementi fratelli (diversi dal link cliccato) al valore specificato nell'argomento "this" (da definire)
-      if (el !== link) el.style.opacity = this;
+      if (el !== link) el.style.opacity = this; // valore dell'opacità verrà assegnato successivamente
     });
 
-    // Imposta l'opacità del logo (se presente) al valore specificato nell'argomento "this" (da definire)
-    logo.style.opacity = this;
+    // Attenua l'opacità del logo del menu
+    logo.style.opacity = this; // valore dell'opacità verrà assegnato successivamente
   }
 };
 
-// **Passaggio dell'argomento alla funzione handleHover** (Passing "argument" into handler)
+// Assegna il valore dell'opacità alla funzione handleHover (modifica per personalizzare l'effetto)
+handleHover.call(this, 0.5); // Esempio: Imposta l'opacità a 0.5 per un leggero effetto dissolvenza
+nav.addEventListener('mouseout', handleHover.bind(1));
 
-// Aggiunge event listener 'mouseover' al contenitore del menu (nav)
-nav.addEventListener('mouseover', handleHover.bind(0.5)); // Attendiamo a 'mouseover', passiamo 0.5 come argomento
+///////////////////////////////////////
+// Navigazione fissa: Intersection Observer API
 
-// Aggiunge event listener 'mouseout' al contenitore del menu (nav)
-nav.addEventListener('mouseout', handleHover.bind(1)); // Attendiamo a 'mouseout', passiamo 1 come argomento
- 
-// **Navigazione adesiva: Intersection Observer API** (Sticky navigation: Intersection Observer API)
+const header = document.querySelector('.header'); // Seleziona l'elemento header
+const navHeight = nav.getBoundingClientRect().height; // Ottieni l'altezza dell'elemento nav
 
-// Recupera l'elemento dell'header
-const header = document.querySelector('.header');
-
-// Ottieni l'altezza della navigazione
-const navHeight = nav.getBoundingClientRect().height;
-
-// Funzione per gestire la navigazione adesiva
 const stickyNav = function (entries) {
-  // Recupera il primo elemento dall'array entries
-  const [entry] = entries;
+  const [entry] = entries; // Destruttura l'array entries per accedere al primo elemento (entry)
+  // console.log(entry); // Puoi usare questo per visualizzare i dettagli dell'intersezione durante lo sviluppo
 
-  // Debug: rimuovi il commento per visualizzare i dettagli dell'intersezione nella console
-  // console.log(entry);
-
-  // Aggiungi la classe 'sticky' alla navigazione se non è più intersecante con il root
-  if (!entry.isIntersecting) {
-    nav.classList.add('sticky');
+  if (!entry.isIntersecting) { // Se l'header non è più visibile nel viewport
+    nav.classList.add('sticky'); // Aggiungi la classe "sticky" alla navigazione
   } else {
-    // Rimuovi la classe 'sticky' alla navigazione se è intersecante con il root
-    nav.classList.remove('sticky');
+    nav.classList.remove('sticky'); // Rimuovi la classe "sticky" alla navigazione
   }
 };
 
-// Crea un nuovo Intersection Observer per la navigazione adesiva
 const headerObserver = new IntersectionObserver(stickyNav, {
-  // Imposta il root a null (intera finestra del viewport)
-  root: null,
-  // Soglia di intersezione: considera la navigazione adesiva quando è completamente fuori (threshold: 0)
-  threshold: 0,
-  // Aggiunge un margine negativo all'elemento root pari all'altezza della navigazione
-  rootMargin: `-${navHeight}px`,
+  root: null,  // Usa il viewport del documento come elemento radice (intera pagina)
+  threshold: 0,  // Controlla l'intersezione al 100% (tutta l'header deve uscire dal viewport)
+  rootMargin: `-${navHeight}px`,  // Sposta la soglia di intersezione verso l'alto dell'altezza della nav
 });
 
-// Osserva l'header con l'Intersection Observer per la navigazione adesiva
-headerObserver.observe(header);
-
+headerObserver.observe(header); // Inizia a osservare l'elemento header
+                                 // per rilevare i cambiamenti di intersezione
 
 ///////////////////////////////////////
-// Rivela le sezioni (Reveal sections)
+// Rivela le sezioni
+const allSections = document.querySelectorAll('.section'); // Seleziona tutti gli elementi con classe "section"
 
-// Recupera tutte le sezioni con la classe 'section'
-const allSections = document.querySelectorAll('.section');
-
-// Funzione per rivelare una sezione
 const revealSection = function (entries, observer) {
-  // Recupera il primo elemento dall'array entries
-  const [entry] = entries;
+  const [entry] = entries; // Destruttura l'array entries per accedere al primo elemento (entry)
 
-  // Se la sezione non è intersecante con il root, esci dalla funzione
-  if (!entry.isIntersecting) return;
+  if (!entry.isIntersecting) return; // Se la sezione non è ancora intersecata con il viewport, interrompi
 
-  // Rimuovi la classe 'section--hidden' dalla sezione intersecante
-  entry.target.classList.remove('section--hidden');
-
-  // Smetti di osservare la sezione rivelata per evitare controlli ridondanti
-  observer.unobserve(entry.target);
+  entry.target.classList.remove('section--hidden'); // Rimuovi la classe "section--hidden" dalla sezione
+  observer.unobserve(entry.target); // Smetti di osservare la sezione rivelata per ottimizzare le prestazioni
 };
 
-// Crea un nuovo Intersection Observer per rivelare le sezioni
-const sectionObserver = new IntersectionObserver(revealSection, {
-  // Imposta il root a null (intera finestra del viewport)
-  root: null,
-  // Soglia di intersezione: rivela la sezione quando è almeno al 15% visibile (threshold: 0.15)
-  threshold: 0.15,
+const sectionObserver = new Intersection Observer(revealSection, {
+  root: null,  // Usa il viewport del documento come elemento radice (intera pagina)
+  threshold: 0.15, // Controlla l'intersezione quando il 15% della sezione entra nel viewport
 });
 
-// Aggiungi la classe 'section--hidden' a tutte le sezioni e inizia a osservarle
 allSections.forEach(function (section) {
-  sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  sectionObserver.observe(section); // Inizia a osservare ogni sezione
+  section.classList.add('section--hidden'); // Aggiungi inizialmente la classe "section--hidden" per nascondere le sezioni
 });
 
 ///////////////////////////////////////
-//seleziona tutti gli elenti img con atrtributo data-src
+// Lazy loading images
+// Caricamento lazy delle immagini (lazy loading)
 const imgTargets = document.querySelectorAll('img[data-src]');
 
-const loading = function(entries, observer) {
-  //riceve un array di oggetti intersectionObserverEntries e l istanza dell osservatore
-  const [entry] = entries; //destructuring assistment
-  
-  //controllo se limmagine interagisce col viewport
-  if (!entry.isIntersecting) return; //se non interagisce esce
+const caricaImmagine = function (entries, observer) {
+  // Prendi il primo elemento dall'array entries
+  const [entry] = entries;
 
-  // Sostituisce l'attributo src dell'immagine con il valore dell'attributo data-src
+  // Se l'immagine non è intersezionale (cioè non è ancora visibile), ritorna
+  if (!entry.isIntersecting) return;
+
+  // Sostituisci l'attributo src con il valore di data-src
   entry.target.src = entry.target.dataset.src;
 
-  // Aggiunge un ascoltatore di eventi per l'evento 'load' sull'immagine
-  entry.target.addEventListener('load', function(){
-    ebtry.target.classList.remove('lazy-img');
+  // Aggiungi un event listener 'load' all'immagine
+  entry.target.addEventListener('load', function () {
+    // Rimuovi la classe 'lazy-img' dall'immagine caricata
+    entry.target.classList.remove('lazy-img');
   });
 
-  
-  // Annulla l'osservazione dell'elemento immagine corrente dall'IntersectionObserver
+  // Smetti di osservare l'immagine caricata
   observer.unobserve(entry.target);
 };
 
-const imgObserver = new IntersectionObserver(loadImg, {
-  // Imposta la funzione loadImg come callback per le intersezioni
-  root: null,  // Usa il viewport come elemento di riferimento
-  threshold: 0,  // Carica l'immagine non appena interseca il viewport
-  rootMargin: '200px',  // Inizia l'osservazione 200px prima dell'intersezione con il viewport
+const imgObserver = new IntersectionObserver(caricaImmagine, {
+  // Imposta la radice dell'osservatore a null (tutto il viewport)
+  root: null,
+  // Soglia di intersezione: l'immagine viene caricata quando è completamente visibile
+  threshold: 0,
+  // Margine della radice: aggiungi un margine di 200px per caricare le immagini leggermente prima che entrino nel viewport
+  rootMargin: '200px',
 });
 
-// Ciclo su ogni immagine con data-src e aggiungila all'osservatore
+// Aggiungi ogni immagine target all'osservatore
 imgTargets.forEach(img => imgObserver.observe(img));
 
 ////////////////////////////////////////
 //slider
+///////////////////////////////////////
+// Slider con Commenti in Italiano
 
-const slider = function()
-{
-  //seleziono tutti gli el che mi servono
-  const slider = document.querySelectorAll('.slide');
-  const btnLeft = document.querySelectorAll('.slider__btn--left');
-  const btnRight = document.querySelectorAll('.slider__btn--right');
-  const dotContainer = document.querySelectorAll('.dots');
+const slider = function () {
+  // Seleziona tutti gli elementi slider con classe "slide"
+  const slides = document.querySelectorAll('.slide');
 
-  //variabili di stato
+  // Seleziona i pulsanti di navigazione sinistra e destra dello slider
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+
+  // Seleziona il contenitore per i pallini dello slider
+  const dotContainer = document.querySelector('.dots');
+
+  // Indice slide corrente (inizia da 0)
   let curSlide = 0;
-  const maxSlide = slide.length;
 
-  //funz interne dello slider
+  // Numero totale di slide
+  const maxSlide = slides.length;
 
-  //creo i pallini di navigazione
-  const createDots = function()
-  {
-    //ciclo su ogni slide
-    slides.forEach(function(_, i)
-    {
-      // Inserisce un nuovo elemento button con classe 'dots__dot' e attributo data-slide="{indice}" dentro il contenitore dei pallini
+  // Funzioni
+
+  // Crea pallini per ogni slide
+  const createDots = function () {
+    slides.forEach(function (_, i) {
+      // Inserisci HTML per un elemento pallino con attributo data-slide impostato sull'indice slide
       dotContainer.insertAdjacentHTML(
         'beforeend',
         `<button class="dots__dot" data-slide="${i}"></button>`
@@ -324,33 +251,26 @@ const slider = function()
     });
   };
 
-  //attiva il pallino di navigazione corrispondente alla slide attuale
-  const activateDot = function(slide)
-  {
-    // Rimuove la classe 'dots__dot--active' da tutti i pallini
-    document
-      .querySelectorAll('.dots__dot')
-      .forEach(dot => dot.classList.remove('dots__dot--active'));
+  // Attiva il pallino corrispondente alla slide corrente
+  const activateDot = function (slide) {
+    // Rimuove la classe "dots__dot--active" da tutti i pallini
+    document.querySelectorAll('.dots__dot').forEach(dot => dot.classList.remove('dots__dot--active'));
 
-    // Aggiunge la classe 'dots__dot--active' al pallino corrispondente allo slide specificato
-    document
-      .querySelectorAll('.dots__dot[data-slide="${slide}"]')
-      .classList.add('dots__dot--active');
+    // Aggiungi la classe "dots__dot--active" al pallino per la slide corrente
+    document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add('dots__dot--active');
   };
 
-  // Sposta lo slider allo slide specificato
+  // Sposta lo slider a una slide specifica
   const goToSlide = function (slide) {
-    // Ciclo su ogni slide
-    slides.forEach(
-      (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
-    );
+    slides.forEach((s, i) => {
+      // Imposta lo stile trasformazione per ogni slide per tradurla orizzontalmente in base al suo indice relativo alla slide corrente
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
   };
 
-  // Funzioni per la navigazione
-
-  // Passa allo slide successivo
+  // Passa alla slide successiva
   const nextSlide = function () {
-    // Se siamo all'ultimo slide, torniamo al primo
+    // Gestisce il loop alla prima slide se si trova sull'ultima
     if (curSlide === maxSlide - 1) {
       curSlide = 0;
     } else {
@@ -361,49 +281,55 @@ const slider = function()
     activateDot(curSlide);
   };
 
-  // Passa allo slide precedente
+  // Passa alla slide precedente
   const prevSlide = function () {
-    // Se siamo al primo slide, torniamo all'ultimo
-    if (curSlide === 0) {  
+    // Gestisce il loop all'ultima slide se si trova sulla prima
+    if (curSlide === 0) {
       curSlide = maxSlide - 1;
     } else {
       curSlide--;
     }
+
     goToSlide(curSlide);
     activateDot(curSlide);
   };
 
-  // Funzione di inizializzazione
+  // Inizializza lo slider
   const init = function () {
-    goToSlide(0);
+    goToSlide(0); // Inizia dalla prima slide
     createDots();
-    activateDot(0);
+    activateDot(0); // Attiva il primo pallino
   };
 
-  // Inizializza lo slider
-  init();
+  init(); // Chiama la funzione di inizializzazione
 
-  // Event listener per la navigazione
-  // gestione click sui pulsanti di nav
+  // Gestori eventi
+
+  // Aggiungi un gestore eventi click per il pulsante di navigazione a destra
   btnRight.addEventListener('click', nextSlide);
+
+  // Aggiungi un gestore eventi click per il pulsante di navigazione a sinistra
   btnLeft.addEventListener('click', prevSlide);
 
-  //gestione tasti tasti freccia
-  document.addEventListener('keydown', function(e){
-    if (e.key === 'ArrowLeft') prevSlide();
-    e.key === 'ArrowRight' && nextSlide();
+  // Aggiungi un gestore eventi tastiera per i tasti freccia
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') {
+      prevSlide();
+    } else if (e.key === 'ArrowRight') {
+      nextSlide();
+    }
   });
 
-  //gestione click pallini di nav
+  // Aggiungi un gestore eventi click per il contenitore dei pallini
   dotContainer.addEventListener('click', function (e) {
-    //controllo se il click avvenuto su um pallino
     if (e.target.classList.contains('dots__dot')) {
-      const { slide } = e.target.dataset;  // Recupera l'indice dello slide dal data-slide del pallino cliccato
+      // Ottieni l'indice slide dall'attributo data-slide del pallino cliccato
+      const slide = e.target.dataset.slide;
+
       goToSlide(slide);
       activateDot(slide);
     }
   });
 };
 
-// Esegue la funzione slider per inizializzare lo slider
-slider();
+slider(); // Chiama la funzione slider per creare lo slider

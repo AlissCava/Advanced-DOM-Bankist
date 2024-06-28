@@ -76,41 +76,34 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 ////////////////////////////////////////
 // **Componente schede a tab (Tabbed component)**
 // Seleziona il contenitore delle schede operative
-const tabsContainer = document.querySelector('.operations__tabs');
+
+// Tabbed component
 
 tabsContainer.addEventListener('click', function (e) {
-  // Trova la scheda cliccata più vicina con la classe '.operations__tab'
   const clicked = e.target.closest('.operations__tab');
 
-  // Controlla se è stata cliccata una scheda valida
+  // Guard clause
   if (!clicked) return;
 
-  // Rimuovi la classe di attivazione da tutte le schede
+  // Remove active classes
   tabs.forEach(t => t.classList.remove('operations__tab--active'));
   tabsContent.forEach(c => c.classList.remove('operations__content--active'));
 
-  // Aggiungi la classe di attivazione alla scheda cliccata
+  // Activate tab
   clicked.classList.add('operations__tab--active');
 
-  // Recupera il contenuto associato alla scheda cliccata
-  const targetContent = document
-    .querySelector(`.operations__content--${clicked.dataset.tab}`);
-
-  // Controlla se è stato trovato il contenuto associato
-  if (targetContent) {
-    // Aggiungi la classe di attivazione al contenuto associato
-    targetContent.classList.add('operations__content--active');
-  } else {
-    // Sezione opzionale per gestire il caso in cui non venga trovato il contenuto
-    console.error('Contenuto associato alla scheda non trovato');
-  }
+  // Activate content area
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
+
 
 ///////////////////////////////////////
 // Animazione dissolvenza del menu
 
 const handleHover = function (e) {
-  // Controlla se l'elemento cliccato ha la classe 'nav__link'
+// Controlla se l'elemento cliccato ha la classe 'nav__link'
   if (e.target.classList.contains('nav__link')) {
     const link = e.target;
     const siblings = link.closest('.nav').querySelectorAll('.nav__link');
@@ -127,7 +120,7 @@ const handleHover = function (e) {
 };
 
 // Assegna il valore dell'opacità alla funzione handleHover (modifica per personalizzare l'effetto)
-handleHover.call(this, 0.5); // Esempio: Imposta l'opacità a 0.5 per un leggero effetto dissolvenza
+nav.addEventListener('mouseover', handleHover.bind(0.5));// Esempio: Imposta l'opacità a 0.5 per un leggero effetto dissolvenza
 nav.addEventListener('mouseout', handleHover.bind(1));
 
 ///////////////////////////////////////
@@ -169,7 +162,7 @@ const revealSection = function (entries, observer) {
   observer.unobserve(entry.target); // Smetti di osservare la sezione rivelata per ottimizzare le prestazioni
 };
 
-const sectionObserver = new Intersection Observer(revealSection, {
+const sectionObserver = new IntersectionObserver(revealSection, {
   root: null,  // Usa il viewport del documento come elemento radice (intera pagina)
   threshold: 0.15, // Controlla l'intersezione quando il 15% della sezione entra nel viewport
 });
